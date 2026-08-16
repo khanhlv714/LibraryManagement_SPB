@@ -16,7 +16,7 @@ data class BookEntity(
 
     val price : Int,
 
-    val categoryId: String,
+    val categoryId: Int,
 
     val accountId: Int
 )

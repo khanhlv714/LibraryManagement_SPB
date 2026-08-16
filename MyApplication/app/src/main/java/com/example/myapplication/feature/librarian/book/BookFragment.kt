@@ -14,6 +14,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.myapplication.core.base.BaseFragment
 import com.example.myapplication.databinding.FragmentBookBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -33,6 +34,9 @@ class BookFragment : BaseFragment() {
     private lateinit var listView: ListView;
     private lateinit var adapter: BookAdapter;
     private lateinit var binding : FragmentBookBinding
+    private lateinit var swipeRefresh: SwipeRefreshLayout;
+
+    //
     
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -50,17 +54,27 @@ class BookFragment : BaseFragment() {
         savedInstanceState: Bundle?
     ) {
         super.onViewCreated(view, savedInstanceState)
+        swipeRefresh = binding.swipeRefresh
         listView = binding.lvBooks
-
         // Adapter ban đầu chưa có dữ liệu
         adapter = BookAdapter(emptyList())
         listView.adapter = adapter
 
         // Quan sát dữ liệu từ ViewModel
 
+        eventListener()
+
         observeUiState();
         // Gọi API thông qua ViewModel
-        viewModel.loadBooks()
+        
+        // ve sau check dieu kiện shouldRefresh ( check time last to Refresh )
+        viewModel.refreshFromServer()
+    }
+
+    private fun eventListener(){
+        swipeRefresh.setOnRefreshListener {
+            viewModel.refreshFromServer();
+        }
     }
     private fun observeUiState() {
 
@@ -70,7 +84,9 @@ class BookFragment : BaseFragment() {
                 Lifecycle.State.STARTED
             ){
 
-                viewModel.uiState.collect { state ->
+                viewModel.uiState.collect{ state ->
+
+                    binding.swipeRefresh.isRefreshing = state.isLoading
 
                     adapter.updateData(state.books)
 

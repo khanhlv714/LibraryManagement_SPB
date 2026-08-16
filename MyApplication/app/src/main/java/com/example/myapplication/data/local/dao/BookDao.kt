@@ -8,6 +8,9 @@ import kotlinx.coroutines.flow.Flow
 interface BookDao {
 
     @Query("SELECT * FROM book")
+    fun observeBooks(): Flow<List<BookEntity>>
+
+    @Query("SELECT * FROM book")
     fun getAllBooks(): Flow<List<BookEntity>>
 
     @Query("SELECT * FROM book WHERE id = :id")

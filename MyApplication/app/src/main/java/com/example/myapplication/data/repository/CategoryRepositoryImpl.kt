@@ -4,53 +4,75 @@ import com.example.myapplication.core.common.Resource
 import com.example.myapplication.core.network.ApiResponseHandler
 import com.example.myapplication.core.network.handleNetworkException
 import com.example.myapplication.core.util.requireBody
+import com.example.myapplication.data.local.dao.CategoryDao
+import com.example.myapplication.data.mapper.bookMapper.toEntiry
 import com.example.myapplication.data.mapper.categoryMapper.toCategory
+import com.example.myapplication.data.mapper.categoryMapper.toEntiry
 import com.example.myapplication.data.remote.api.CategoryApi
 import com.example.myapplication.data.remote.dto.request.CategoryRequest
+import com.example.myapplication.data.remote.dto.response.ApiResponse
 import com.example.myapplication.data.remote.dto.response.CategoryResponse
 import com.example.myapplication.domain.model.Category
+import com.example.myapplication.domain.model.CategoryWithBookCount
 import com.example.myapplication.domain.repository.CategoryRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filter
+import okhttp3.Response
 import javax.inject.Inject
 
 class CategoryRepositoryImpl @Inject constructor(
-    private val categoryApi: CategoryApi
-) : CategoryRepository{
+    private val categoryApi: CategoryApi,
+    private val categoryDao: CategoryDao
+) : CategoryRepository {
 
-    override suspend fun getCategories(): Resource<List<Category>> {
 
+    override fun getLocalCategories(): Flow<List<CategoryWithBookCount>> {
+        return categoryDao.getCategoriesWithBookCount()
+    }
+
+    override suspend fun refreshCategories(): Resource<Unit>{
         return try {
             val response = categoryApi.getCategories()
-            val result = ApiResponseHandler.handle(response)
-            when(result) {
+
+            when (val result = ApiResponseHandler.handle(response)) {
+
                 is Resource.Success -> {
-                    val data = result.data
-                    val categories = data.map { item ->
-                        item.toCategory()
-                    }
-                    return Resource.Success(categories)
+                    val categories = result.data.map { it.toEntiry() }
+
+                    categoryDao.insertCategories(categories)
+
+                    Resource.Success(Unit)
                 }
-                is Resource.Error -> return result
+
+                is Resource.Error -> {
+                    Resource.Error(
+                        message = result.message
+                    )
+                }
             }
 
         } catch (e: Exception) {
             handleNetworkException(e)
         }
     }
+}
 
-    suspend fun getCategoryById(id: Int): CategoryResponse {
-        return categoryApi.getCategoryById(id).requireBody()
-    }
 
-    suspend fun addCategory(category: CategoryRequest): CategoryResponse {
-        return categoryApi.addCategory(category).requireBody()
-    }
+
+
+//    suspend fun getCategoryById(id: Int): CategoryResponse {
+//        return categoryApi.getCategoryById(id).requireBody()
+//    }
+
+//    suspend fun addCategory(category: CategoryRequest): CategoryResponse {
+//        return categoryApi.addCategory(category).requireBody()
+//    }
 
 //    suspend fun updateCategory(category: CategoryRequest): CategoryResponse {
 //        return categoryApi.updateCategory(category.id, category).requireBody()
 //    }
 
-    suspend fun deleteCategory(id: Int): Boolean {
-        return categoryApi.deleteCategory(id).isSuccessful
-    }
+//    suspend fun deleteCategory(id: Int): Boolean {
+//        return categoryApi.deleteCategory(id).isSuccessful
+//    }
 
-}

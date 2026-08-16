@@ -10,6 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.myapplication.R
 import com.example.myapplication.core.base.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
@@ -22,6 +23,8 @@ class CategoryFragment : BaseFragment() {
 
     private lateinit var listView: ListView
     private lateinit var adapter: CategoryAdapter
+    private lateinit var swipeRefresh: SwipeRefreshLayout;
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,6 +47,7 @@ class CategoryFragment : BaseFragment() {
         listView = view.findViewById(R.id.lvCategories)
 
         // Adapter ban đầu chưa có dữ liệu
+        swipeRefresh = view.findViewById(R.id.swipeRefresh)
         adapter = CategoryAdapter(emptyList())
         listView.adapter = adapter
 
@@ -51,7 +55,7 @@ class CategoryFragment : BaseFragment() {
          observeUiState()
 
         // Gọi API thông qua ViewModel
-        viewModel.loadCategorys()
+        viewModel.refreshFromServer()
     }
     fun observeUiState(){
         viewLifecycleOwner.lifecycleScope.launch {
@@ -62,6 +66,8 @@ class CategoryFragment : BaseFragment() {
 
                 viewModel.uiState.collect { state ->
 
+                    swipeRefresh.isRefreshing = state.isLoading
+                    
                     adapter.updateData(state.categories)
 
                     if (state.isLoading) {

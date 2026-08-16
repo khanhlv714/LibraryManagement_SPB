@@ -7,5 +7,6 @@ data class BookResponse(
     val price: Int,
     val categoryName: String,
     val createdBy: String,
+    val accountId : Int,
     val categoryId : Int
 )

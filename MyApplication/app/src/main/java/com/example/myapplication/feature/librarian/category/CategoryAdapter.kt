@@ -7,10 +7,11 @@ import android.widget.BaseAdapter
 import android.widget.TextView
 import com.example.myapplication.R
 import com.example.myapplication.domain.model.Category
+import com.example.myapplication.domain.model.CategoryWithBookCount
 
-class CategoryAdapter(var list: List<Category>) : BaseAdapter() {
+class CategoryAdapter(var list: List<CategoryWithBookCount>) : BaseAdapter() {
 
-    fun updateData(newList: List<Category>) {
+    fun updateData(newList: List<CategoryWithBookCount>) {
         list = newList
         notifyDataSetChanged()
     }
@@ -19,7 +20,7 @@ class CategoryAdapter(var list: List<Category>) : BaseAdapter() {
         return list.size
     }
 
-    override fun getItem(p0: Int): Category? {
+    override fun getItem(p0: Int): CategoryWithBookCount? {
         return list[p0]
     }
 
@@ -42,8 +43,8 @@ class CategoryAdapter(var list: List<Category>) : BaseAdapter() {
         val tvCateogoryNameandCode = view.findViewById<TextView>(R.id.tvCateogoryNameandCode)
         val tvAmountBook = view.findViewById<TextView>(R.id.tvAmountBook)
 
-        tvCateogoryNameandCode.text = category!!.categoryName +" - "+category!!.categoryCode
-        tvAmountBook.text = "Books : "+category!!.amountBook
+        tvCateogoryNameandCode.text = category!!.category.categoryName +" - "+category.category.categoryCode
+        tvAmountBook.text = "Books : "+category.amountBook
 
         return view
     }

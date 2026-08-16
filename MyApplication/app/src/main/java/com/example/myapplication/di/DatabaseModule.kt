@@ -36,9 +36,7 @@ object DatabaseModule {
     fun provideBookDao(
         database: AppDatabase
     ): BookDao {
-
         return database.bookDao()
-
     }
 
     @Provides

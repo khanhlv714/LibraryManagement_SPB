@@ -1,5 +1,7 @@
 package com.example.library.dto.response;
 
+import java.time.LocalDateTime;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,5 +18,9 @@ public class MemberResponse {
     private Integer createdById;
 
     private String createdByUsername;
+    
+    private LocalDateTime updatedAt;
+    
+    private LocalDateTime deleteAt; 
 
 }

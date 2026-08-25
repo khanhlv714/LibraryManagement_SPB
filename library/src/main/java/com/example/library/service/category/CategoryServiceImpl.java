@@ -1,5 +1,6 @@
 package com.example.library.service.category;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -12,6 +13,7 @@ import com.example.library.dto.response.BookResponse;
 import com.example.library.dto.response.CategoryResponse;
 import com.example.library.entity.Account;
 import com.example.library.entity.Category;
+import com.example.library.mapper.CategoryMapper;
 import com.example.library.repository.AccountRepository;
 import com.example.library.repository.CategoryRepository;
 
@@ -41,11 +43,7 @@ public class CategoryServiceImpl implements CategoryService {
                 .orElseThrow(() ->
                         new UsernameNotFoundException(username));
 
-        Category category = Category.builder()
-                .categoryCode(request.getCategoryCode())
-                .categoryName(request.getCategoryName())
-                .createdBy(account)
-                .build();
+        Category category = CategoryMapper.toCategory(request, account);
 
         categoryRepository.save(category);
 
@@ -64,45 +62,46 @@ public class CategoryServiceImpl implements CategoryService {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() ->
                         new RuntimeException("Category not found"));
+        
+        CategoryResponse res =CategoryMapper.toCategoryResponse(category);
 
-        CategoryResponse response = CategoryResponse.builder()
-                .id(category.getId())
-                .categoryCode(category.getCategoryCode())
-                .categoryName(category.getCategoryName())
-                .createdBy(category.getCreatedBy())
-                .build();
-
-        return new ApiResponse<>(true, "Get category success", response);
+        return new ApiResponse<>(true, "Get category success", res);
     }
 
-    @Override
-    public ApiResponse<Void> update(
-            Integer id,
-            CategoryRequest request) {
-
-        Category category = categoryRepository.findById(id)
-                .orElseThrow(() ->
-                        new RuntimeException("Category not found"));
-
-        category.setCategoryCode(request.getCategoryCode());
-        category.setCategoryName(request.getCategoryName());
-
-        categoryRepository.save(category);
-
-        return new ApiResponse<>(true, "Update category success", null);
-    }
-
-    @Override
-    public ApiResponse<Void> delete(Integer id) {
-
-        Category category = categoryRepository.findById(id)
-                .orElseThrow(() ->
-                        new RuntimeException("Category not found"));
-
-        categoryRepository.delete(category);
-
-        return new ApiResponse<>(true, "Delete category success", null);
-    }
+//    @Override
+//    public ApiResponse<Void> update(
+//            Integer id,
+//            CategoryRequest request) {
+//
+//        Category category = categoryRepository.findById(id)
+//                .orElseThrow(() ->
+//                        new RuntimeException("Category not found"));
+//
+//        category.setCategoryCode(request.getCategoryCode());
+//        category.setCategoryName(request.getCategoryName());
+//        category.setUpdatedAt(LocalDateTime.now());
+//
+//        categoryRepository.save(category);
+//
+//        return new ApiResponse<>(true, "Update category success", null);
+//    }
+    
+//    @Override
+//    public ApiResponse<Void> delete(Integer id) {
+//
+//        Category category = categoryRepository.findById(id)
+//                .orElseThrow(() ->
+//                        new RuntimeException("Category not found"));
+//
+//        LocalDateTime now = LocalDateTime.now();
+//
+//        category.setDeleteAt(now);
+//        category.setUpdatedAt(now);
+//
+//        categoryRepository.save(category);
+//
+//        return new ApiResponse<>(true, "Delete category success", null);
+//    }
     
 //    public CategoryResponse toResponse(Category category){
 //

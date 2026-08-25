@@ -4,5 +4,5 @@ data class Session(
 
     val username: String,
 
-    val role: String
-)
+    val role: String,
+    )

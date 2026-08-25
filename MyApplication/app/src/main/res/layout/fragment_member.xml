@@ -8,22 +8,42 @@
     android:layout_height="match_parent"
     android:padding="10dp"
     android:background="@color/grey"
-    tools:context=".feature.librarian.category.CategoryFragment">
+    tools:context=".feature.librarian.member.MemberFragment">
+
+    <!-- Search -->
+    <EditText
+        android:id="@+id/edtSearch"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Tìm kiếm thành viên..."
+        android:inputType="text"
+        android:singleLine="true"
+        android:padding="12dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/spinnerStatus"
+        android:layout_marginEnd="8dp" />
+
+    <!-- Status -->
+    <Spinner
+        android:id="@+id/spinnerStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minWidth="120dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/edtSearch"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Members -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rcvMembers"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="16dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="12dp"
+        app:layout_constraintTop_toBottomOf="@id/edtSearch"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="parent"
-        tools:listitem="@layout/item_member"
-        >
-
-    </androidx.recyclerview.widget.RecyclerView>
-
-
-
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:listitem="@layout/item_member" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

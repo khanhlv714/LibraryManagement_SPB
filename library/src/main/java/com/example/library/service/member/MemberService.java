@@ -10,12 +10,12 @@ public interface MemberService {
 
     ApiResponse<Void> create(MemberRequest request);
 
-    ApiResponse<Void> update(Integer id, MemberRequest request);
-
-    ApiResponse<Void> delete(Integer id);
-
     ApiResponse<MemberResponse> getById(Integer id);
 
     ApiResponse<List<MemberResponse>> getAll();
+    
+//  ApiResponse<Void> update(Integer id, MemberRequest request);
+//
+//  ApiResponse<Void> delete(Integer id);
 
 }

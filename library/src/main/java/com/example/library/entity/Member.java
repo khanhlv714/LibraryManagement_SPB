@@ -1,5 +1,7 @@
 package com.example.library.entity;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -20,19 +22,28 @@ import lombok.Setter;
 @Setter
 public class Member {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
 
-    @Column(nullable = false, unique = true)
-    private String cardNumber;
+	@Column(name = "card_number", nullable = false, unique = true)
+	private String cardNumber;
 
-    @Column(nullable = false)
-    private String name;
+	@Column(name = "name", nullable = false)
+	private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "createdBy", nullable = false)
-    private Account createdBy;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "created_by", nullable = false)
+	private Account createdBy;
+
+	@Column(name = "delete_at")
+	private LocalDateTime deleteAt;
+
+	@Column(name = "version", nullable = false)
+	private Long version;
+
+	@Column(name = "updated_at", nullable = false)
+	private LocalDateTime updatedAt;
 
     public Member() {
     }

@@ -1,5 +1,6 @@
 package com.example.library.repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,6 +18,8 @@ public interface BookRepository
     boolean existsByBookCode(String bookCode);
 
     Optional<Book> findByBookCode(String bookCode);
+    
+    List<Book> findByUpdatedAtGreaterThanEqual(LocalDateTime time);
     
   
 }

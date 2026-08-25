@@ -2,46 +2,59 @@ package com.example.myapplication.feature.librarian.member
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.myapplication.core.common.Resource
-import com.example.myapplication.domain.usecase.member.GetMembersUseCase
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import com.example.myapplication.domain.model.Book
+import com.example.myapplication.domain.model.Member
+import com.example.myapplication.domain.model.MemberLoanStatus
+import com.example.myapplication.domain.usecase.member.ObserveMembers
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
-
 @HiltViewModel
+
 class MemberViewModel @Inject constructor(
-    private val getMembersUseCase: GetMembersUseCase
+    private val observeMembers: ObserveMembers
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(MemberUiState())
-    val uiState = _uiState.asStateFlow()
+    private val _search = MutableStateFlow("")
+    val search = _search.asStateFlow()
 
-    fun loadMembers() {
-        viewModelScope.launch {
-            _uiState.update {
-                it.copy(
-                    loading = true, error = null
-                )
-            }
+    private val _memberStatus = MutableStateFlow<MemberLoanStatus>(MemberLoanStatus.NO_BORROWING)
+    val memberStatus = _memberStatus.asStateFlow()
 
-            when (val result = getMembersUseCase()) {
-                is Resource.Success -> {
-                    _uiState.update {
-                        it.copy(
-                            loading = false, error = null, memberList = result.data
-                        )
-                    }
-                }
+    private val _isRefreshing = MutableStateFlow(false)
+    private val isRefreshing = _isRefreshing.asStateFlow()
 
-                is Resource.Error -> {
-                    _uiState.update {
-                        it.copy(loading = false, error  = result.message);
-                    }
-                }
-            }
-        }
+    private val _error = MutableStateFlow<String?>(null)
+    private val error = _error.asStateFlow()
+
+
+    val memberFilter: Flow<PagingData<Member>> =
+        combine(
+            memberStatus,
+            search,
+        ) { memberStatus, search ->
+            memberStatus to search
+        }.flatMapLatest{ (memberStatus, search) ->
+            observeMembers.observe(search,memberStatus)
+        }.cachedIn(viewModelScope)
+
+
+
+    fun search(value: String) {
+        _search.value = value
     }
+    fun setMemberStatus(value: MemberLoanStatus) {
+        _memberStatus.value = value
+    }
+
+
 }

@@ -31,13 +31,15 @@ public class JwtService {
 
     public String generateToken(
             String username,
-            String role) {
+            String role,
+            Long securityVersion) {
 
 
 
         return Jwts.builder()
                 .subject(username)
                 .claim("role", role)
+                .claim("securityVersion", securityVersion)
                 .issuedAt(new Date())
                 .expiration(
                         new Date(
@@ -52,11 +54,13 @@ public class JwtService {
 
 
     public String generateRefreshToken(
-            String username) {
+            String username,
+            Long securityVersion) {
 
 
         return Jwts.builder()
                 .subject(username)
+                .claim("securityVersion",securityVersion)
                 .issuedAt(new Date())
                 .expiration(
                         new Date(
@@ -82,6 +86,13 @@ public class JwtService {
         Claims claims = extractClaims(token);
 
         return claims.get("role", String.class);
+    }
+
+    public Long extractSecurityVersion(String token) {
+
+        Claims claims = extractClaims(token);
+
+        return claims.get("securityVersion", Long.class);
     }
 
 

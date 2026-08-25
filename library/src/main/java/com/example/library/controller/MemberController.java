@@ -33,18 +33,18 @@ public class MemberController {
         return memberService.create(request);
     }
 
-    @PutMapping("/{id}")
-    public ApiResponse<Void> update(
-            @PathVariable Integer id,
-            @Valid @RequestBody MemberRequest request) {
-
-        return memberService.update(id, request);
-    }
-
-    @DeleteMapping("/{id}")
-    public ApiResponse<Void> delete(@PathVariable Integer id) {
-        return memberService.delete(id);
-    }
+//    @PutMapping("/{id}")
+//    public ApiResponse<Void> update(
+//            @PathVariable Integer id,
+//            @Valid @RequestBody MemberRequest request) {
+//
+//        return memberService.update(id, request);
+//    }
+//
+//    @DeleteMapping("/{id}")
+//    public ApiResponse<Void> delete(@PathVariable Integer id) {
+//        return memberService.delete(id);
+//    }
 
     @GetMapping("/{id}")
     public ApiResponse<MemberResponse> getById(@PathVariable Integer id) {

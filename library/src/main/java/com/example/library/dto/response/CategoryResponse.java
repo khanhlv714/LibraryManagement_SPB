@@ -1,5 +1,7 @@
 package com.example.library.dto.response;
 
+import java.time.LocalDateTime;
+
 import com.example.library.entity.Account;
 
 import lombok.AllArgsConstructor;
@@ -21,7 +23,12 @@ public class CategoryResponse {
 
     private String categoryName;
 
-    private Account createdBy;
+    private Integer accountId;
+        
+    private LocalDateTime updatedAt;
+    
+    private LocalDateTime deleteAt;
     
     private Long amountBook;
+
 }

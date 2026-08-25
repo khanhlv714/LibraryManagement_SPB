@@ -1,5 +1,6 @@
 package com.example.library.repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -8,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.example.library.dto.response.CategoryResponse;
+import com.example.library.entity.Book;
 import com.example.library.entity.Category;
 
 @Repository
@@ -22,14 +24,26 @@ public interface CategoryRepository
     	        c.id,
     	        c.categoryCode,
     	        c.categoryName,
-    	        c.createdBy,
+    	        c.createdBy.id,
+    	        c.updatedAt,
+    	        c.deleteAt,
     	        COUNT(b.id)
     	    )
     	    FROM Category c
     	    LEFT JOIN Book b ON b.category = c
-    	    GROUP BY c.id, c.categoryCode, c.categoryName, c.createdBy
+    	    GROUP BY
+    	        c.id,
+    	        c.categoryCode,
+    	        c.categoryName,
+    	        c.createdBy,
+    	        c.updatedAt,
+    	        c.deleteAt
     	""")
     	List<CategoryResponse> findAllWithBookCount();
+    
+    
+    List<Category> findByUpdatedAtGreaterThanEqual(LocalDateTime time);
+
     
 
 }

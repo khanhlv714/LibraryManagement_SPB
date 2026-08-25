@@ -6,6 +6,7 @@ data class Category(
     val categoryCode: String,
 
     val categoryName: String,
+) {
+    override fun toString(): String = categoryName
 
-    val amountBook : Int
-    )
+}

@@ -34,19 +34,19 @@ public class LoanSlipController {
         return ResponseEntity.status(HttpStatus.CREATED).body(loanSlipService.create(request));
     }
 
-    @PutMapping("/{id}")
-    public ApiResponse<Void> update(
-            @PathVariable Integer id,
-            @Valid @RequestBody LoanSlipRequest request) {
-
-        return loanSlipService.update(id, request);
-    }
-
-    @DeleteMapping("/{id}")
-    public ApiResponse<Void> delete(@PathVariable Integer id) {
-
-        return loanSlipService.delete(id);
-    }
+//    @PutMapping("/{id}")
+//    public ApiResponse<Void> update(
+//            @PathVariable Integer id,
+//            @Valid @RequestBody LoanSlipRequest request) {
+//
+//        return loanSlipService.update(id, request);
+//    }
+//
+//    @DeleteMapping("/{id}")
+//    public ApiResponse<Void> delete(@PathVariable Integer id) {
+//
+//        return loanSlipService.delete(id);
+//    }
 
     @GetMapping("/{id}")
     public ApiResponse<LoanSlipResponse> getById(

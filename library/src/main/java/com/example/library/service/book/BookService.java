@@ -14,7 +14,7 @@ public interface BookService {
 
     ApiResponse<BookResponse> getById(Integer id);
 
-    ApiResponse<Void> update(Integer id, BookRequest request);
-
-    ApiResponse<Void> delete(Integer id);
+//    ApiResponse<Void> update(Integer id, BookRequest request);
+//
+//    ApiResponse<Void> delete(Integer id);
 }

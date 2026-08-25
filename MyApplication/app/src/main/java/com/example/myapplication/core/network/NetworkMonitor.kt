@@ -7,56 +7,71 @@ import android.net.NetworkCapabilities
 import android.net.NetworkRequest
 import dagger.hilt.android.qualifiers.ApplicationContext
 import jakarta.inject.Inject
+import javax.inject.Singleton
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 
-class NetworkMonitor @Inject constructor(
-    @ApplicationContext
-    private val context: Context
-) {
+@Singleton
+class NetworkMonitor {
+    var isSynced: Boolean = false
+    private set
+    var isOnline = MutableStateFlow(false)
+    private set
+    val connectivityManager: ConnectivityManager;
 
-    val isOnline: Flow<Boolean> = callbackFlow {
+    @Inject
+    constructor(@ApplicationContext context: Context) {
+        connectivityManager = context.getSystemService(
+            ConnectivityManager::class.java
+        )
 
-        val connectivityManager =
-            context.getSystemService(
-                ConnectivityManager::class.java
-            )
+        val callback = object : ConnectivityManager.NetworkCallback() {
 
-        val callback =
-            object : ConnectivityManager.NetworkCallback() {
-
-                override fun onAvailable(
-                    network: Network
-                ) {
-                    trySend(true)
-                }
-
-                override fun onLost(
-                    network: Network
-                ) {
-                    trySend(false)
-                }
+            override fun onAvailable(
+                network: Network
+            ) {
+                isOnline.value = checkInternet()
             }
 
+            override fun onLost(
+                network: Network
+            ) {
+                isOnline.value = checkInternet()
+            }
+
+            override fun onCapabilitiesChanged(
+                network: Network, networkCapabilities: NetworkCapabilities
+            ) {
+                isOnline.value = checkInternet()
+            }
+        }
+
         val request =
-            NetworkRequest.Builder()
-                .addCapability(
-                    NetworkCapabilities.NET_CAPABILITY_INTERNET
-                )
+            NetworkRequest.Builder().addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
                 .build()
 
         connectivityManager.registerNetworkCallback(
-            request,
-            callback
+            request, callback
         )
-
-        awaitClose{
-            connectivityManager.unregisterNetworkCallback(
-                callback
-            )
-        }
+        isOnline.value = checkInternet()
     }
-        .distinctUntilChanged()
+
+    fun checkInternet(): Boolean {
+        val network = connectivityManager.activeNetwork ?: return false
+
+        val capabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
+
+        return capabilities.hasCapability(
+            NetworkCapabilities.NET_CAPABILITY_INTERNET
+        ) && capabilities.hasCapability(
+            NetworkCapabilities.NET_CAPABILITY_VALIDATED
+        )
+    }
+
+    fun markSynced() {
+       isSynced = true;
+    }
 }

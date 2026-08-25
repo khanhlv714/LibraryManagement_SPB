@@ -1,13 +1,18 @@
 package com.example.myapplication.feature.librarian.home
 
+import android.content.Context
 import android.os.Bundle
 import android.view.Menu
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.datastore.preferences.preferencesDataStore
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.coroutineScope
+import androidx.lifecycle.viewModelScope
 import com.example.myapplication.R
 import com.example.myapplication.core.base.BaseActivity
 import com.example.myapplication.databinding.ActivityLibrarianHomeBinding
@@ -17,12 +22,16 @@ import com.example.myapplication.feature.librarian.category.CategoryFragment
 import com.example.myapplication.feature.librarian.loanslip.LoanSlipFragment
 import com.example.myapplication.feature.librarian.member.MemberFragment
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+
 
 @AndroidEntryPoint
 class LibrarianHomeActivity : BaseActivity() {
+
+    private val viewModel : LibrarianHomeViewModel by viewModels()
     private lateinit var binding: ActivityLibrarianHomeBinding;
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?){
         super.onCreate(savedInstanceState)
         binding = ActivityLibrarianHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -33,13 +42,20 @@ class LibrarianHomeActivity : BaseActivity() {
         if (savedInstanceState == null) {
             openFragment(BookFragment())
         }
-
-        
+        registerEvent();
+        viewModel.registerChangeNetworkListener()
     }
+
+    private fun registerEvent(){
+        binding.swipeRefresh.setOnRefreshListener {
+            viewModel.manualSync();
+        }
+    }
+
     private fun setupToolbar() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = "Home"
+        supportActionBar?.title = "Book"
     }
 
     private fun setupNavigation() {
@@ -54,11 +70,11 @@ class LibrarianHomeActivity : BaseActivity() {
                     true
                 }
 
-                R.id.item_category -> {
-                    openFragment(CategoryFragment())
-                    supportActionBar?.title = "Category"
-                    true
-                }
+//                R.id.item_category -> {
+//                    openFragment(CategoryFragment())
+//                    supportActionBar?.title = "Category"
+//                    true
+//                }
                 R.id.item_loan_slip -> {
                     openFragment(LoanSlipFragment())
                     supportActionBar?.title = "Loan Slip"

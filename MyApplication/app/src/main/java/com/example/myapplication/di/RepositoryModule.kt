@@ -5,11 +5,13 @@ import com.example.myapplication.data.repository.BookRepositoryImpl
 import com.example.myapplication.data.repository.CategoryRepositoryImpl
 import com.example.myapplication.data.repository.LoanSlipRepositoryImpl
 import com.example.myapplication.data.repository.MemberRepositoryImpl
+import com.example.myapplication.data.repository.SyncRepositoryImpl
 import com.example.myapplication.domain.repository.AuthRepository
 import com.example.myapplication.domain.repository.BookRepository
 import com.example.myapplication.domain.repository.CategoryRepository
 import com.example.myapplication.domain.repository.LoanSlipRepository
 import com.example.myapplication.domain.repository.MemberRepository
+import com.example.myapplication.domain.repository.SyncRepository
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -49,4 +51,9 @@ abstract class RepositoryModule {
     abstract fun bindLoanSlipReposiroty(
         impl:  LoanSlipRepositoryImpl
     ): LoanSlipRepository
+
+    @Binds
+    abstract fun bindSyncReposiroty(
+        impl:  SyncRepositoryImpl
+    ): SyncRepository
 }

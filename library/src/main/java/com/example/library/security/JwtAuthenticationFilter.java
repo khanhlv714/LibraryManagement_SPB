@@ -3,6 +3,7 @@ package com.example.library.security;
 import java.io.IOException;
 import java.util.List;
 
+import com.example.library.service.security_service.AccountSecurityService;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,12 +22,16 @@ public class JwtAuthenticationFilter
 
 
     private final JwtService jwtService;
+    private final AccountSecurityService accountSecurityService;
+
 
 
     public JwtAuthenticationFilter(
-            JwtService jwtService
+            JwtService jwtService,
+            AccountSecurityService accountSecurityService
     ) {
         this.jwtService = jwtService;
+        this.accountSecurityService = accountSecurityService;
     }
 
 
@@ -82,8 +87,10 @@ public class JwtAuthenticationFilter
                 String role =
                         jwtService.extractRole(token);
 
-
-
+                Long securityVersion = jwtService.extractSecurityVersion(token);
+                if(accountSecurityService.isSecurityVersionValid(username,securityVersion) == false){
+                    throw new Exception("version security fail");
+                }
                 var authorities =
                         List.of(
                             new SimpleGrantedAuthority(
@@ -110,13 +117,8 @@ public class JwtAuthenticationFilter
 
             }
 
-
-
         } catch (Exception e) {
-
-
-            // Token sai / hết hạn
-
+            // Token sai / hết hạn // phien ban security sai
             SecurityContextHolder
                     .clearContext();
 

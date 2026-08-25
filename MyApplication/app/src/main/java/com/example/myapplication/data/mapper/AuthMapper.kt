@@ -9,7 +9,7 @@ object AuthMapper {
     fun LoginResponse.toSession(): Session {
         return Session(
             username = username,
-            role = role
+            role = role,
         )
     }
 

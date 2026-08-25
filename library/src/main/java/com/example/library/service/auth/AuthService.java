@@ -8,7 +8,8 @@ import com.example.library.dto.response.LoginResponse;
 public interface AuthService {
 
 	ApiResponse<LoginResponse> login(LoginRequest request);
-    ApiResponse<Void> logout();
+//	
+//    ApiResponse<Void> logout();
     ApiResponse<Void> register(RegisterRequest request);
 
 }

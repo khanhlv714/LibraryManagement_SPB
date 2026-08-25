@@ -38,31 +38,31 @@ public class LibrarianController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
 
-	@PutMapping("/{id}")
-	public ApiResponse<Void> update(@PathVariable Integer id, @Valid @RequestBody LibrarianUpdateRequest request) {
+//	@PutMapping("/{id}")
+//	public ApiResponse<Void> update(@PathVariable Integer id, @Valid @RequestBody LibrarianUpdateRequest request) {
+//
+//		return librarianService.update(id, request);
+//	}
+//
+//	@DeleteMapping("/{id}")
+//	public ApiResponse<Void> delete(@PathVariable Integer id) {
+//
+//		return librarianService.delete(id);
+//	}
+//
+//	@PutMapping("/{id}/change-password")
+//	public ApiResponse<Void> changePassword(@PathVariable Integer id,
+//			@Valid @RequestBody ChangePasswordRequest request) {
+//
+//		return librarianService.changePassword(id, request);
+//	}
 
-		return librarianService.update(id, request);
-	}
-
-	@DeleteMapping("/{id}")
-	public ApiResponse<Void> delete(@PathVariable Integer id) {
-
-		return librarianService.delete(id);
-	}
-
-	@PutMapping("/{id}/change-password")
-	public ApiResponse<Void> changePassword(@PathVariable Integer id,
-			@Valid @RequestBody ChangePasswordRequest request) {
-
-		return librarianService.changePassword(id, request);
-	}
-
-	@GetMapping("/{id}")
-	public ApiResponse<LibrarianResponse> getById(@PathVariable Integer id) {
-
-		return librarianService.getById(id);
-
-	}
+//	@GetMapping("/{id}")
+//	public ApiResponse<LibrarianResponse> getById(@PathVariable Integer id) {
+//
+//		return librarianService.getById(id);
+//
+//	}
 
 	@GetMapping
 	public ResponseEntity<ApiResponse<List<LibrarianResponse>>> getAll() {

@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -20,6 +21,7 @@ class TokenManager @Inject constructor(
 ) {
     private var accessToken: String? = null
     private var refreshToken: String? = null
+
 
     companion object {
         private val ACCESS_TOKEN_KEY = stringPreferencesKey("access_token")
@@ -39,6 +41,8 @@ class TokenManager @Inject constructor(
             refreshToken = token
         }
     }
+
+
     suspend fun loadToken() {
             context.dataStore.data
                 .collect{ preferences ->
@@ -56,6 +60,7 @@ class TokenManager @Inject constructor(
     fun getRefreshToken(): String? {
         return refreshToken
     }
+
 
     suspend fun clearAccessToken() {
         context.dataStore.edit { preferences ->

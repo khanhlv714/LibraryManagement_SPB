@@ -2,6 +2,7 @@ package com.example.myapplication.data.local.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.time.LocalDateTime
 
 
 @Entity(tableName = "book")
@@ -18,5 +19,12 @@ data class BookEntity(
 
     val categoryId: Int,
 
-    val accountId: Int
+    val updatedAt : LocalDateTime,
+
+    val deleteAt : LocalDateTime?,
+
+    val accountId: Int,
+
+    val version : Long
+
 )

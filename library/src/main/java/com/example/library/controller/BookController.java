@@ -49,18 +49,18 @@ public class BookController {
         return bookService.getById(id);
     }
 
-    @PutMapping("/{id}")
-    public ApiResponse<Void> update(
-            @PathVariable Integer id,
-            @RequestBody BookRequest request) {
-
-        return bookService.update(id, request);
-    }
-
-    @DeleteMapping("/{id}")
-    public ApiResponse<Void> delete(
-            @PathVariable Integer id) {
-
-        return bookService.delete(id);
-    }
+//    @PutMapping("/{id}")
+//    public ApiResponse<Void> update(
+//            @PathVariable Integer id,
+//            @RequestBody BookRequest request) {
+//
+//        return bookService.update(id, request);
+//    }
+//
+//    @DeleteMapping("/{id}")
+//    public ApiResponse<Void> delete(
+//            @PathVariable Integer id) {
+//
+//        return bookService.delete(id);
+//    }
 }

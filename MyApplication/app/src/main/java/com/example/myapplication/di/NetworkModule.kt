@@ -1,14 +1,17 @@
 package com.example.myapplication.di
 
+import com.example.myapplication.core.datastore.SessionManager
 import com.example.myapplication.core.datastore.TokenManager
 import com.example.myapplication.core.network.ApiInterceptor
 import com.example.myapplication.core.network.TokenAuthenticator
-import com.example.myapplication.core.util.DateJsonDeserializer
+import com.example.myapplication.core.util.LocalDateJsonDeserializer
+import com.example.myapplication.core.util.LocalTimeDateJsonDeserializer
 import com.example.myapplication.data.remote.api.AuthApi
 import com.example.myapplication.data.remote.api.BookApi
 import com.example.myapplication.data.remote.api.CategoryApi
 import com.example.myapplication.data.remote.api.LoanSlipApi
 import com.example.myapplication.data.remote.api.MemberApi
+import com.example.myapplication.data.remote.api.SyncApi
 import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
@@ -20,6 +23,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.time.LocalDate
+import java.time.LocalDateTime
 import javax.inject.Singleton
 
 @Module
@@ -27,6 +31,8 @@ import javax.inject.Singleton
 object NetworkModule {
 
     private const val BASE_URL = "http://192.168.75.1:8080/"
+
+
 
 
     @Provides
@@ -61,9 +67,10 @@ object NetworkModule {
     @Singleton
     fun provideAuthenticator(
         tokenManager: TokenManager,
-        authApi: AuthApi
+        authApi: AuthApi,
+        sessionManager: SessionManager
     ): Authenticator {
-        return TokenAuthenticator(tokenManager,authApi);
+        return TokenAuthenticator(tokenManager,authApi,sessionManager);
 
     }
 
@@ -91,7 +98,8 @@ object NetworkModule {
         okHttpClient: OkHttpClient
     ): Retrofit {
         val gson = GsonBuilder()
-            .registerTypeAdapter(LocalDate::class.java, DateJsonDeserializer)
+            .registerTypeAdapter(LocalDate::class.java, LocalDateJsonDeserializer)
+            .registerTypeAdapter(LocalDateTime::class.java, LocalTimeDateJsonDeserializer)
             .create()
 
         return Retrofit.Builder()
@@ -136,5 +144,13 @@ object NetworkModule {
     ): LoanSlipApi {
         return retrofit.create(LoanSlipApi::class.java)
 
+    }
+
+    @Provides
+    @Singleton
+    fun provideSyncApi(
+        retrofit: Retrofit
+    ): SyncApi {
+        return retrofit.create(SyncApi::class.java)
     }
 }

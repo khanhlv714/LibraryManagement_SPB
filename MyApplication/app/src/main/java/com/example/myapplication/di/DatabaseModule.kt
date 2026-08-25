@@ -2,6 +2,8 @@ package com.example.myapplication.di
 
 import android.content.Context
 import androidx.room.Room
+import androidx.room.TypeConverters
+import com.example.myapplication.core.util.DateTimeConverter
 import com.example.myapplication.data.local.database.AppDatabase
 import com.example.myapplication.data.local.dao.BookDao
 import com.example.myapplication.data.local.dao.CategoryDao

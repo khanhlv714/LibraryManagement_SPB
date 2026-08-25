@@ -1,5 +1,7 @@
 package com.example.library.service.auth;
 
+import java.time.LocalDateTime;
+
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -33,6 +35,8 @@ public class AuthServiceImpl implements AuthService {
 
 	@Override
 	public ApiResponse<LoginResponse> login(LoginRequest request) {
+		LoginRequest x = request;
+		System.out.println(x.getPassword()+"--"+x.getUsername());
 		Authentication authentication = authenticationManager
 				.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
 
@@ -40,9 +44,11 @@ public class AuthServiceImpl implements AuthService {
 
 		String role = user.getAuthorities().iterator().next().getAuthority().replace("ROLE_", "");
 
-		String accessToken = jwtService.generateToken(user.getUsername(), role);
+		Account account = accountRepository.getByUsername(request.getUsername());
 
-		String refreshToken = jwtService.generateRefreshToken(user.getUsername());
+		String accessToken = jwtService.generateToken(user.getUsername(), role,account.getVersion());
+
+		String refreshToken = jwtService.generateRefreshToken(user.getUsername(),account.getVersion());
 
 		LoginResponse response = LoginResponse.builder().username(user.getUsername()).role(role)
 				.accessToken(accessToken).refreshToken(refreshToken).build();
@@ -69,6 +75,9 @@ public class AuthServiceImpl implements AuthService {
 	            .fullName(request.getFullName())
 	            .role(request.getRole())
 	            .staffCode(request.getStaffCode())
+	            .deleteAt(null)
+	            .updatedAt(LocalDateTime.now())
+	            .version(0L)
 	            .build();
 	    System.out.println("===== REGISTER save=====");
 
@@ -81,10 +90,10 @@ public class AuthServiceImpl implements AuthService {
 	}
 
 
-	@Override
-	public ApiResponse<Void> logout() {
-		return new ApiResponse<>(true, "logout success", null);
-	}
+//	@Override
+//	public ApiResponse<Void> logout() {
+//		return new ApiResponse<>(true, "logout success", null);
+//	}
 }
 
 //@Service

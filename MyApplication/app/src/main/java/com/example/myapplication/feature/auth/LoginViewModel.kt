@@ -3,6 +3,8 @@ package com.example.myapplication.feature.auth
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.core.common.Resource
+import com.example.myapplication.core.datastore.DatabaseVersionManager
+import com.example.myapplication.domain.usecase.SyncDataUseCase
 import com.example.myapplication.domain.usecase.auth.LoginUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -15,19 +17,17 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
 
-    private val loginUseCase: LoginUseCase
+    private val loginUseCase: LoginUseCase, private val databaseVersionManager: DatabaseVersionManager, val syncDataUseCase: SyncDataUseCase
 
 ) : ViewModel() {
     private var loginJob: Job? = null
 
     private val _loginState = MutableStateFlow(LoginState())
 
-    val loginState: StateFlow<LoginState> =
-        _loginState.asStateFlow()
+    val loginState: StateFlow<LoginState> = _loginState.asStateFlow()
 
     fun login(
-        username: String,
-        password: String
+        username: String, password: String
     ) {
 
         loginJob?.cancel()
@@ -42,10 +42,17 @@ class LoginViewModel @Inject constructor(
 
                 is Resource.Success -> {
 
-                    _loginState.value = LoginState(
-                        role = result.data.role,
-                        isSuccess = true
-                    )
+                    // chekk for sync
+                    val timeLastUpdate = databaseVersionManager.getUpdateTime();
+                    if (timeLastUpdate == null) {  // login lau dau //
+                        _loginState.value = LoginState(
+                            role = result.data.role, isSuccess = true, isDatabaseInitialized = false
+                        )
+                    } else {
+                        _loginState.value = LoginState(
+                            role = result.data.role, isSuccess = true, isDatabaseInitialized = true
+                        )
+                    }
 
                 }
 
@@ -54,7 +61,6 @@ class LoginViewModel @Inject constructor(
                     _loginState.value = LoginState(
                         error = result.message
                     )
-
                 }
             }
         }

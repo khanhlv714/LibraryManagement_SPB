@@ -1,5 +1,7 @@
 package com.example.library.dto.response;
 
+import java.time.LocalDateTime;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,4 +22,8 @@ public class LibrarianResponse {
     private String role;
 
     private String staffCode;
+    
+    private LocalDateTime updatedAt;
+    
+    private LocalDateTime deleteAt;
 }

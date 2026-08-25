@@ -10,6 +10,6 @@ class RefreshCategoriesUseCase @Inject constructor(
     private val repository: CategoryRepository
 ) {
     suspend operator fun invoke(): Resource<Unit> {
-        return repository.refreshCategories()
+        return Resource.Success(Unit)
     }
 }

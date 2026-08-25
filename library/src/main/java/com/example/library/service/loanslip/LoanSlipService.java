@@ -10,9 +10,9 @@ public interface LoanSlipService {
 
     ApiResponse<Void> create(LoanSlipRequest request);
 
-    ApiResponse<Void> update(Integer id, LoanSlipRequest request);
-
-    ApiResponse<Void> delete(Integer id);
+//    ApiResponse<Void> update(Integer id, LoanSlipRequest request);
+//
+//    ApiResponse<Void> delete(Integer id);
 
     ApiResponse<LoanSlipResponse> getById(Integer id);
 

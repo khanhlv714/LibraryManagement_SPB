@@ -2,6 +2,7 @@ package com.example.myapplication.core.network
 
 import android.util.Log
 import com.example.myapplication.core.common.Resource
+import com.example.myapplication.core.datastore.SessionManager
 import com.example.myapplication.core.datastore.TokenManager
 import com.example.myapplication.data.remote.api.AuthApi
 import com.example.myapplication.data.remote.dto.request.RefreshTokenRequest
@@ -17,13 +18,14 @@ import okhttp3.Route
 import javax.inject.Inject
 
 class TokenAuthenticator @Inject constructor(
-    private val tokenManager: TokenManager, private val authApi: AuthApi
+    private val tokenManager: TokenManager,
+    private val authApi: AuthApi,
+    private val sessionManager: SessionManager
 ) : Authenticator {
 
     override fun authenticate(
         route: Route?, response: Response
     ): Request? {
-
         val refreshToken = tokenManager.getRefreshToken() ?: return null
         var resource: Resource<RefreshTokenResponse>? = null;
         runBlocking {
@@ -36,7 +38,7 @@ class TokenAuthenticator @Inject constructor(
                 resource = handleNetworkException(e)
             }
         }
-        if (resource is Resource.Success) {
+        if (resource is Resource.Success){
             val newAccessToken = resource.data.accessToken
             val newRefreshToken = resource.data.refreshToken;
 
@@ -51,6 +53,11 @@ class TokenAuthenticator @Inject constructor(
             return response.request.newBuilder().header(
                 "Authorization", "Bearer $newAccessToken"
             ).build()
+        }else{
+            runBlocking {
+                tokenManager.clear()
+                sessionManager.closeSession()
+            }
         }
         return null;
     }

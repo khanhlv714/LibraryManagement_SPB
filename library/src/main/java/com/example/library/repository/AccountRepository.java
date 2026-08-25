@@ -17,7 +17,6 @@ public interface AccountRepository
     boolean existsByUsername(String username);
 
     Account getByUsername(String username);
-
     
     boolean existsByStaffCode(String staffCode);
 

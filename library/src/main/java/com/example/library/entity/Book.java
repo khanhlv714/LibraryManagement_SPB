@@ -1,5 +1,7 @@
 package com.example.library.entity;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -9,96 +11,48 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "book")
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 public class Book {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+	@Column(name = "book_code", nullable = false, unique = true)
+	private String bookCode;
 
-    @Column(nullable = false, unique = true)
-    private String bookCode;
+	@Column(name = "book_name", nullable = false)
+	private String bookName;
 
-    @Column(nullable = false)
-    private String bookName;
+	@Column(name = "price", nullable = false)
+	private Integer price;
 
-    @Column(nullable = false)
-    private Integer price;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "category_id", nullable = false)
+	private Category category;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "categoryId", nullable = false)
-    private Category category;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "created_by", nullable = false)
+	private Account createdBy;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "createdBy", nullable = false)
-    private Account createdBy;
+	@Column(name = "delete_at")
+	private LocalDateTime deleteAt;
 
-    public Book() {
-    }
+	@Column(name = "version", nullable = false)
+	private Long version;
 
-    public Book(Integer id,
-                String bookCode,
-                String bookName,
-                Integer price,
-                Category category,
-                Account createdBy) {
-        this.id = id;
-        this.bookCode = bookCode;
-        this.bookName = bookName;
-        this.price = price;
-        this.category = category;
-        this.createdBy = createdBy;
-    }
+	@Column(name = "updated_at", nullable = false)
+	private LocalDateTime updatedAt;
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getBookCode() {
-        return bookCode;
-    }
-
-    public void setBookCode(String bookCode) {
-        this.bookCode = bookCode;
-    }
-
-    public String getBookName() {
-        return bookName;
-    }
-
-    public void setBookName(String bookName) {
-        this.bookName = bookName;
-    }
-
-    public Integer getPrice() {
-        return price;
-    }
-
-    public void setPrice(Integer price) {
-        this.price = price;
-    }
-
-    public Category getCategory() {
-        return category;
-    }
-
-    public void setCategory(Category category) {
-        this.category = category;
-    }
-
-    public Account getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(Account createdBy) {
-        this.createdBy = createdBy;
-    }
 }

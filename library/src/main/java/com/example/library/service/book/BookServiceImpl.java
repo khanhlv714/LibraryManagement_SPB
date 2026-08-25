@@ -1,5 +1,6 @@
 package com.example.library.service.book;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.security.core.Authentication;
@@ -12,6 +13,7 @@ import com.example.library.dto.response.BookResponse;
 import com.example.library.entity.Account;
 import com.example.library.entity.Book;
 import com.example.library.entity.Category;
+import com.example.library.mapper.BookMapper;
 import com.example.library.repository.AccountRepository;
 import com.example.library.repository.BookRepository;
 import com.example.library.repository.CategoryRepository;
@@ -47,13 +49,7 @@ public class BookServiceImpl implements BookService {
         Account account = accountRepository.findByUsername(authentication.getName())
                 .orElseThrow(() -> new RuntimeException("Account not found"));
 
-        Book book = Book.builder()
-                .bookCode(request.getBookCode())
-                .bookName(request.getBookName())
-                .price(request.getPrice())
-                .category(category)
-                .createdBy(account)
-                .build();
+        Book book = BookMapper.toBook(request, account, category);
 
         bookRepository.save(book);
 
@@ -65,7 +61,7 @@ public class BookServiceImpl implements BookService {
 
         List<BookResponse> response = bookRepository.findAll()
                 .stream()
-                .map(this::toResponse)
+                .map(BookMapper::toBookResponse)
                 .toList();
 
         return new ApiResponse<>(true, "Get all book success", response);
@@ -77,55 +73,48 @@ public class BookServiceImpl implements BookService {
         Book book = bookRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Book not found"));
 
-        return new ApiResponse<>(true, "Get book success", toResponse(book));
+        return new ApiResponse<>(true, "Get book success", BookMapper.toBookResponse(book));
     }
 
-    @Override
-    public ApiResponse<Void> update(Integer id, BookRequest request) {
+//    @Override
+//    public ApiResponse<Void> update(Integer id, BookRequest request) {
+//
+//        Book book = bookRepository.findById(id)
+//                .orElseThrow(() -> new RuntimeException("Book not found"));
+//
+//        if (!book.getBookCode().equals(request.getBookCode())
+//                && bookRepository.existsByBookCode(request.getBookCode())) {
+//
+//            return new ApiResponse<>(false, "Book code already exists", null);
+//        }
+//
+//        Category category = categoryRepository.findById(request.getCategoryId())
+//                .orElseThrow(() -> new RuntimeException("Category not found"));
+//
+//        book.setBookCode(request.getBookCode());
+//        book.setBookName(request.getBookName());
+//        book.setPrice(request.getPrice());
+//        book.setCategory(category);
+//        book.setUpdatedAt(LocalDateTime.now());
+//
+//        bookRepository.save(book);
+//
+//        return new ApiResponse<>(true, "Update book success", null);
+//    }
 
-        Book book = bookRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Book not found"));
-
-        if (!book.getBookCode().equals(request.getBookCode())
-                && bookRepository.existsByBookCode(request.getBookCode())) {
-
-            return new ApiResponse<>(false, "Book code already exists", null);
-        }
-
-        Category category = categoryRepository.findById(request.getCategoryId())
-                .orElseThrow(() -> new RuntimeException("Category not found"));
-
-        book.setBookCode(request.getBookCode());
-        book.setBookName(request.getBookName());
-        book.setPrice(request.getPrice());
-        book.setCategory(category);
-
-        bookRepository.save(book);
-
-        return new ApiResponse<>(true, "Update book success", null);
-    }
-
-    @Override
-    public ApiResponse<Void> delete(Integer id) {
-
-        Book book = bookRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Book not found"));
-
-        bookRepository.delete(book);
-
-        return new ApiResponse<>(true, "Delete book success", null);
-    }
-
-    private BookResponse toResponse(Book book) {
-
-        return BookResponse.builder()
-                .id(book.getId())
-                .bookCode(book.getBookCode())
-                .bookName(book.getBookName())
-                .price(book.getPrice())
-                .categoryName(book.getCategory().getCategoryName())
-                .createdBy(book.getCreatedBy().getUsername())
-                .categoryId(book.getCategory().getId())
-                .build();
-    }
+//    @Override
+//    public ApiResponse<Void> delete(Integer id) {
+//
+//        Book book = bookRepository.findById(id)
+//                .orElseThrow(() -> new RuntimeException("Book not found"));
+//
+//        LocalDateTime now = LocalDateTime.now();
+//
+//        book.setDeleteAt(now);
+//        book.setUpdatedAt(now);
+//
+//        bookRepository.save(book);
+//
+//        return new ApiResponse<>(true, "Delete book success", null);
+//    }
 }

@@ -6,9 +6,10 @@ import com.google.gson.JsonElement
 import java.lang.reflect.Type
 import java.text.SimpleDateFormat
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.util.Locale
 
-object DateJsonDeserializer : JsonDeserializer<LocalDate> {
+object LocalDateJsonDeserializer : JsonDeserializer<LocalDate> {
 
     override fun deserialize(
         json: JsonElement,
@@ -16,6 +17,17 @@ object DateJsonDeserializer : JsonDeserializer<LocalDate> {
         context: JsonDeserializationContext
     ): LocalDate {
         return LocalDate.parse(json.asString)
+    }
+}
+
+object LocalTimeDateJsonDeserializer : JsonDeserializer<LocalDateTime> {
+
+    override fun deserialize(
+        json: JsonElement,
+        typeOfT: Type,
+        context: JsonDeserializationContext
+    ): LocalDateTime {
+        return LocalDateTime.parse(json.asString)
     }
 }
 

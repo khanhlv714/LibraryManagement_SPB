@@ -3,7 +3,7 @@ package com.example.myapplication.feature.librarian.category
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.core.common.Resource
-import com.example.myapplication.domain.usecase.category.GetCategoriesUseCase
+import com.example.myapplication.domain.usecase.category.ObserveCategoriesUseCase
 import com.example.myapplication.domain.usecase.category.RefreshCategoriesUseCase
 import com.example.myapplication.feature.librarian.book.BookUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,7 +19,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CategoryViewModel @Inject constructor(
-         private val getCategoriesUseCase: GetCategoriesUseCase,
+         private val getCategoriesUseCase: ObserveCategoriesUseCase,
          private val refreshCategoriesUseCase: RefreshCategoriesUseCase
 ) : ViewModel() {
     private val categoriesList = getCategoriesUseCase()
@@ -38,11 +38,11 @@ class CategoryViewModel @Inject constructor(
             var categoriesUi = categoriesList
             if (search.isNullOrBlank() == false){
                 categoriesUi = categoriesUi.filter {
-                    it.category.categoryCode.contains(search,false)
-                            || it.category.categoryCode.contains(search,false)
+                    it.categoryCode.contains(search,false)
+                            || it.categoryCode.contains(search,false)
                 }
             }
-            CategoryUiState(categoriesUi, isRefreshing, error);
+            CategoryUiState(listOf(), isRefreshing, error);
         }.stateIn(
         viewModelScope, SharingStarted.WhileSubscribed(5_000), CategoryUiState()
         )

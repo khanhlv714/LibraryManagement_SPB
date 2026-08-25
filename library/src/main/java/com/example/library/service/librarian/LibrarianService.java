@@ -12,18 +12,18 @@ public interface LibrarianService {
 
     ApiResponse<Void> create(LibrarianCreateRequest request);
 
-    ApiResponse<Void> update(
-            Integer id,
-            LibrarianUpdateRequest request);
-
-    ApiResponse<Void> delete(Integer id);
-
-    ApiResponse<Void> changePassword(
-            Integer id,
-            ChangePasswordRequest request);
-
-    ApiResponse<LibrarianResponse> getById(
-            Integer id);
-
+//    ApiResponse<Void> update(
+//            Integer id,
+//            LibrarianUpdateRequest request);
+//
+//    ApiResponse<Void> delete(Integer id);
+//
+//    ApiResponse<Void> changePassword(
+//            Integer id,
+//            ChangePasswordRequest request);
+//
+//    ApiResponse<LibrarianResponse> getById(
+//            Integer id);
+//
     ApiResponse<List<LibrarianResponse>> getAll();
 }

@@ -14,8 +14,8 @@ public interface CategoryService{
 
     ApiResponse<CategoryResponse> getById(Integer id);
 
-    ApiResponse<Void> update(Integer id,CategoryRequest request);
-
-    ApiResponse<Void> delete(Integer id);
+//    ApiResponse<Void> update(Integer id,CategoryRequest request);
+//
+//    ApiResponse<Void> delete(Integer id);
 
 }

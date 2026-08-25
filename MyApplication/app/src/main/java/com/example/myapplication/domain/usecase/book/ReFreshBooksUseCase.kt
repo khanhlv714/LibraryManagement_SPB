@@ -9,6 +9,7 @@ class ReFreshBooksUseCase @Inject constructor(
     private val repository: BookRepository
 ) {
     suspend operator fun invoke(): Resource<Unit> {
-        return repository.refreshLocal()
+       // return repository.refreshLocal()
+        return Resource.Success(Unit);
     }
 }

@@ -1,5 +1,7 @@
 package com.example.myapplication.data.remote.dto.response
 
+import java.time.LocalDateTime
+
 data class BookResponse(
     val id: Int,
     val bookCode: String,
@@ -7,6 +9,8 @@ data class BookResponse(
     val price: Int,
     val categoryName: String,
     val createdBy: String,
-    val accountId : Int,
-    val categoryId : Int
+    val accountId: Int,
+    val categoryId: Int,
+    val updatedAt: LocalDateTime,
+    val deleteAt: LocalDateTime?
 )

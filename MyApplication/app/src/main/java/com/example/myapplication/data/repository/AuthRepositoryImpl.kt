@@ -46,13 +46,9 @@ class AuthRepositoryImpl @Inject constructor(
                 is Resource.Error -> return result
                 is Resource.Success -> {
                     val data = result.data
-                    tokenManager.saveAccessToken(data.accessToken)
-                    tokenManager.saveRefreshToken(data.refreshToken)
-                    sessionManager.saveSession(
-                        Session(
-                            username = data.username, role = data.role
-                        )
-                    )
+                    tokenManager.saveAccessToken(result.data.accessToken);
+                    tokenManager.saveRefreshToken(result.data.refreshToken);
+                    sessionManager.saveSession(Session(result.data.username, result.data.role));
                     Resource.Success(data.toLoginResult())
                 }
             }

@@ -1,6 +1,7 @@
 package com.example.library.entity;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -22,6 +23,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+
 public class LoanSlip {
 
     @Id
@@ -45,9 +47,17 @@ public class LoanSlip {
 
     @Column(nullable = false)
     private Integer states;
+    
+    @Column(nullable = false)
+    private LocalDateTime updatedAt;
+    
+    private LocalDateTime deleteAt;
 
     @Column(nullable = false)
     private LocalDate borrowDate;
+    
+    @Column(nullable = false)
+    private Long version;
 
     @Column(nullable = false)
     private LocalDate dueDate;

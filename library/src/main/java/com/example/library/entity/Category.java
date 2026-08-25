@@ -1,5 +1,7 @@
 package com.example.library.entity;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -9,69 +11,43 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "category")
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 public class Category {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
 
-    @Column(nullable = false, unique = true)
-    private String categoryCode;
+	@Column(name = "category_code", nullable = false, unique = true)
+	private String categoryCode;
 
-    @Column(nullable = false)
-    private String categoryName;
+	@Column(name = "category_name", nullable = false)
+	private String categoryName;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "createdBy", nullable = false)
-    private Account createdBy;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "created_by", nullable = false)
+	private Account createdBy;
 
-    public Category() {
-    }
+	@Column(name = "delete_at")
+	private LocalDateTime deleteAt;
 
-    public Category(Integer id,
-                    String categoryCode,
-                    String categoryName,
-                    Account createdBy) {
-        this.id = id;
-        this.categoryCode = categoryCode;
-        this.categoryName = categoryName;
-        this.createdBy = createdBy;
-    }
+	@Column(name = "version", nullable = false)
+	private Long version;
 
-    public Integer getId() {
-        return id;
-    }
+	@Column(name = "updated_at", nullable = false)
+	private LocalDateTime updatedAt;
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
-    public String getCategoryCode() {
-        return categoryCode;
-    }
-
-    public void setCategoryCode(String categoryCode) {
-        this.categoryCode = categoryCode;
-    }
-
-    public String getCategoryName() {
-        return categoryName;
-    }
-
-    public void setCategoryName(String categoryName) {
-        this.categoryName = categoryName;
-    }
-
-    public Account getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(Account createdBy) {
-        this.createdBy = createdBy;
-    }
 }

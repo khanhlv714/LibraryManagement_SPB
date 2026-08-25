@@ -16,6 +16,10 @@ interface CategoryDao {
 """)
     fun getCategoriesWithBookCount(): Flow<List<CategoryWithBookCount>>
 
+    @Query("SELECT * FROM category ORDER BY categoryName ASC")
+    fun observeCategories(): Flow<List<CategoryEntity>>
+
+
     @Query("SELECT * FROM category")
     fun getAllCategories(): Flow<List<CategoryEntity>>
 

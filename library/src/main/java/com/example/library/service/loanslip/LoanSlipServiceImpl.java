@@ -1,5 +1,6 @@
 package com.example.library.service.loanslip;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,6 +15,7 @@ import com.example.library.entity.Account;
 import com.example.library.entity.Book;
 import com.example.library.entity.LoanSlip;
 import com.example.library.entity.Member;
+import com.example.library.mapper.LoanSlipMapper;
 import com.example.library.repository.AccountRepository;
 import com.example.library.repository.BookRepository;
 import com.example.library.repository.LoanSlipRepository;
@@ -53,67 +55,63 @@ public class LoanSlipServiceImpl implements LoanSlipService {
 			throw new RuntimeException("Book is already borrowed");
 		}
 
-		LoanSlip loanSlip = new LoanSlip();
-
-		loanSlip.setReceiptNumber(request.getReceiptNumber());
-		loanSlip.setAccount(account);
-		loanSlip.setBook(book);
-		loanSlip.setMember(member);
-		loanSlip.setStates(request.getState());
-		loanSlip.setBorrowDate(request.getBorrowDate());
-		loanSlip.setDueDate(request.getDueDate());
-
-		loanSlipRepository.save(loanSlip);
+		loanSlipRepository.save(LoanSlipMapper.toLoanSlip(request, account, member, book));
 
 		return ApiResponse.success();
 	}
+//
+//	@Override
+//	public ApiResponse<Void> update(Integer id, LoanSlipRequest request) {
+//
+//		LoanSlip loanSlip = loanSlipRepository.findById(id)
+//				.orElseThrow(() -> new RuntimeException("Loan slip not found"));
+//
+//		if (!loanSlip.getReceiptNumber().equals(request.getReceiptNumber())
+//				&& loanSlipRepository.existsByReceiptNumber(request.getReceiptNumber())) {
+//
+//			throw new RuntimeException("Receipt number already exists");
+//		}
+//
+//		Book book = bookRepository.findById(request.getBookId())
+//				.orElseThrow(() -> new RuntimeException("Book not found"));
+//
+//		Member member = memberRepository.findById(request.getMemberId())
+//				.orElseThrow(() -> new RuntimeException("Member not found"));
+//
+//		if (!loanSlip.getBook().getId().equals(book.getId()) && request.getState() == 0
+//				&& loanSlipRepository.existsByBookIdAndStates(book.getId(), 0)) {
+//
+//			throw new RuntimeException("Book is already borrowed");
+//		}
+//
+//		loanSlip.setReceiptNumber(request.getReceiptNumber());
+//		loanSlip.setBook(book);
+//		loanSlip.setMember(member);
+//		loanSlip.setStates(request.getState());
+//		loanSlip.setBorrowDate(request.getBorrowDate());
+//		loanSlip.setDueDate(request.getDueDate());
+//		loanSlip.setUpdatedAt(LocalDateTime.now());
+//
+//		loanSlipRepository.save(loanSlip);
+//
+//		return ApiResponse.success();
+//	}
 
-	@Override
-	public ApiResponse<Void> update(Integer id, LoanSlipRequest request) {
-
-		LoanSlip loanSlip = loanSlipRepository.findById(id)
-				.orElseThrow(() -> new RuntimeException("Loan slip not found"));
-
-		if (!loanSlip.getReceiptNumber().equals(request.getReceiptNumber())
-				&& loanSlipRepository.existsByReceiptNumber(request.getReceiptNumber())) {
-
-			throw new RuntimeException("Receipt number already exists");
-		}
-
-		Book book = bookRepository.findById(request.getBookId())
-				.orElseThrow(() -> new RuntimeException("Book not found"));
-
-		Member member = memberRepository.findById(request.getMemberId())
-				.orElseThrow(() -> new RuntimeException("Member not found"));
-
-		if (!loanSlip.getBook().getId().equals(book.getId()) && request.getState() == 0
-				&& loanSlipRepository.existsByBookIdAndStates(book.getId(), 0)) {
-
-			throw new RuntimeException("Book is already borrowed");
-		}
-
-		loanSlip.setReceiptNumber(request.getReceiptNumber());
-		loanSlip.setBook(book);
-		loanSlip.setMember(member);
-		loanSlip.setStates(request.getState());
-		loanSlip.setBorrowDate(request.getBorrowDate());
-		loanSlip.setDueDate(request.getDueDate());
-
-		loanSlipRepository.save(loanSlip);
-
-		return ApiResponse.success();
-	}
-
-	@Override
-	public ApiResponse<Void> delete(Integer id) {
-
-		LoanSlip loanSlip = loanSlipRepository.findById(id)
-				.orElseThrow(() -> new RuntimeException("Loan slip not found"));
-
-		loanSlipRepository.delete(loanSlip);
-
-		return ApiResponse.success();
-	}
+//	@Override
+//	public ApiResponse<Void> delete(Integer id) {
+//
+//	    LoanSlip loanSlip = loanSlipRepository.findById(id)
+//	            .orElseThrow(() -> new RuntimeException("Loan slip not found"));
+//
+//	    LocalDateTime now = LocalDateTime.now();
+//
+//	    loanSlip.setDeleteAt(now);
+//	    loanSlip.setUpdatedAt(now);
+//
+//	    loanSlipRepository.save(loanSlip);
+//
+//	    return ApiResponse.success();
+//	}
 
 	@Override
 	public ApiResponse<LoanSlipResponse> getById(Integer id) {
@@ -121,7 +119,7 @@ public class LoanSlipServiceImpl implements LoanSlipService {
 		LoanSlip loanSlip = loanSlipRepository.findById(id)
 				.orElseThrow(() -> new RuntimeException("Loan slip not found"));
 
-		LoanSlipResponse response = mapToResponse(loanSlip);
+		LoanSlipResponse response = LoanSlipMapper.toLoanSlipResponse(loanSlip);
 
 		return ApiResponse.success(response);
 	}
@@ -138,7 +136,7 @@ public class LoanSlipServiceImpl implements LoanSlipService {
 		List<LoanSlip> result = loanSlipRepository.findByAccountId(account.getId())
 				.orElseThrow(() -> new RuntimeException("Loan slip not found"));
 
-		List<LoanSlipResponse> responses = result.stream().map(this::mapToResponse).toList();
+		List<LoanSlipResponse> responses = result.stream().map(LoanSlipMapper::toLoanSlipResponse).toList();
 
 		return ApiResponse.success(responses);
 	}
@@ -146,40 +144,9 @@ public class LoanSlipServiceImpl implements LoanSlipService {
 	@Override
 	public ApiResponse<List<LoanSlipResponse>> getAll() {
 
-		List<LoanSlipResponse> responses = loanSlipRepository.findAll().stream().map(this::mapToResponse).toList();
+		List<LoanSlipResponse> responses = loanSlipRepository.findAll().stream().map(LoanSlipMapper::toLoanSlipResponse).toList();
 
 		return ApiResponse.success(responses);
-	}
-
-	private LoanSlipResponse mapToResponse(LoanSlip loanSlip) {
-
-		LoanSlipResponse response = new LoanSlipResponse();
-
-		response.setId(loanSlip.getId());
-		response.setReceiptNumber(loanSlip.getReceiptNumber());
-
-		response.setCreatedByAccountId(loanSlip.getAccount().getId());
-		response.setCreatedByUsername(loanSlip.getAccount().getUsername());
-
-		response.setBookId(loanSlip.getBook().getId());
-
-		response.setBookName(loanSlip.getBook().getBookName());
-
-		response.setBookCode(loanSlip.getBook().getBookCode());
-
-		response.setMemberId(loanSlip.getMember().getId());
-
-		response.setMemberCardNumber(loanSlip.getMember().getCardNumber());
-
-		response.setMemberName(loanSlip.getMember().getName());
-
-		response.setState(loanSlip.getStates());
-
-		response.setBorrowDate(loanSlip.getBorrowDate());
-
-		response.setDueDate(loanSlip.getDueDate());
-
-		return response;
 	}
 
 }

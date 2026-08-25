@@ -12,5 +12,7 @@ import retrofit2.Response
 interface CategoryRepository{
      fun getLocalCategories(): Flow<List<CategoryWithBookCount>>
 
-    suspend fun refreshCategories(): Resource<Unit>
+    fun observeCategories(): Flow<List<Category>>
+
+//    suspend fun refreshCategories(): Resource<Unit>
 }

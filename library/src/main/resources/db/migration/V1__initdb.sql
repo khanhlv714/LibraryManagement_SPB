@@ -10,7 +10,7 @@
     delete_at DATETIME2 NULL,
     version BIGINT NOT NULL DEFAULT 0,
 
-    admin_code NVARCHAR(50) NULL UNIQUE
+    staff_code NVARCHAR(50) NULL UNIQUE
 );
 
 
@@ -104,3 +104,8 @@ CREATE TABLE loan_slip (
         FOREIGN KEY (member_id)
         REFERENCES member(id)
 );
+
+CREATE SEQUENCE global_sync_version
+    AS BIGINT
+    START WITH 1
+    INCREMENT BY 1;

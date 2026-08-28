@@ -4,8 +4,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.example.library.dto.response.CategoryResponse;
@@ -40,9 +42,21 @@ public interface CategoryRepository
     	        c.deleteAt
     	""")
     	List<CategoryResponse> findAllWithBookCount();
-    
-    
+
     List<Category> findByUpdatedAtGreaterThanEqual(LocalDateTime time);
+
+	@Query("""
+            SELECT c
+            FROM Category c
+            WHERE c.version <= :snapshotVersion
+              AND c.id > :cursor
+            ORDER BY c.id ASC
+            """)
+	List<Category> initCategory(
+			@Param("cursor") long cursor,
+			@Param("snapshotVersion") long snapshotVersion,
+			Pageable pageable
+	);
 
     
 

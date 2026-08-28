@@ -1,8 +1,6 @@
 package com.example.library.dto.response;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
+import lombok.*;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,13 +8,14 @@ import lombok.Setter;
 import lombok.AllArgsConstructor;
 
 
+@Data
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class SyncDataResponse<T> {
+public class SyncInfoResponse {
 
-    private Boolean hasNext;
-    private Integer nextCursor;
-    private List<T> data;
+    private Long snapshotVersion;
+
+    private Integer limit;
 }

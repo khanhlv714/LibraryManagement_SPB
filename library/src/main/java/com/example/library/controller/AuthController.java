@@ -26,9 +26,6 @@ public class AuthController {
     public ApiResponse<LoginResponse> login(
             @RequestBody LoginRequest request) {
         System.out.println("===== LOGIN CONTROLLER =====");
-        int x = 10;
-        int y = 5; 
-        int z = 30;
 
         return authService.login(request);
     }

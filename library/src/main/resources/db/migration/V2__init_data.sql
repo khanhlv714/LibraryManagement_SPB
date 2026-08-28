@@ -1,6 +1,14 @@
 ﻿-- ============================================================
 -- INIT DATA
+-- GLOBAL SYNC VERSION
 -- ============================================================
+
+-- ============================================================
+-- 0. GLOBAL SYNC VERSION
+-- ============================================================
+-- version là cột có sẵn trong các bảng.
+-- Sequence này chỉ có nhiệm vụ cấp số version tăng dần
+-- dùng chung cho toàn bộ database.
 
 
 -- ============================================================
@@ -18,19 +26,24 @@ INSERT INTO category
 )
 VALUES
     ('CAT001', N'Lập trình',
-        '2026-08-01 08:00:00', NULL, 0, 2),
+     '2026-08-01 08:00:00', NULL,
+     NEXT VALUE FOR global_sync_version, 2),
 
     ('CAT002', N'Cơ sở dữ liệu',
-        '2026-08-02 09:00:00', NULL, 0, 2),
+     '2026-08-02 09:00:00', NULL,
+     NEXT VALUE FOR global_sync_version, 2),
 
     ('CAT003', N'Mạng máy tính',
-        '2026-08-03 10:00:00', NULL, 0, 3),
+     '2026-08-03 10:00:00', NULL,
+     NEXT VALUE FOR global_sync_version, 3),
 
     ('CAT004', N'Hệ điều hành',
-        '2026-08-04 11:00:00', NULL, 0, 3),
+     '2026-08-04 11:00:00', NULL,
+     NEXT VALUE FOR global_sync_version, 3),
 
     ('CAT005', N'Trí tuệ nhân tạo',
-        '2026-08-05 14:00:00', NULL, 0, 2);
+     '2026-08-05 14:00:00', NULL,
+     NEXT VALUE FOR global_sync_version, 2);
 
 
 -- ============================================================
@@ -48,22 +61,28 @@ INSERT INTO member
 )
 VALUES
     ('CARD001', N'Nguyễn Văn An',
-        '2026-08-01 08:30:00', NULL, 0, 2),
+     '2026-08-01 08:30:00', NULL,
+     NEXT VALUE FOR global_sync_version, 2),
 
     ('CARD002', N'Trần Thị Bình',
-        '2026-08-02 09:30:00', NULL, 0, 2),
+     '2026-08-02 09:30:00', NULL,
+     NEXT VALUE FOR global_sync_version, 2),
 
     ('CARD003', N'Lê Văn Cường',
-        '2026-08-03 10:30:00', NULL, 0, 3),
+     '2026-08-03 10:30:00', NULL,
+     NEXT VALUE FOR global_sync_version, 3),
 
     ('CARD004', N'Phạm Thị Dung',
-        '2026-08-04 11:30:00', NULL, 0, 3),
+     '2026-08-04 11:30:00', NULL,
+     NEXT VALUE FOR global_sync_version, 3),
 
     ('CARD005', N'Hoàng Văn Em',
-        '2026-08-05 13:30:00', NULL, 0, 2),
+     '2026-08-05 13:30:00', NULL,
+     NEXT VALUE FOR global_sync_version, 2),
 
     ('CARD006', N'Vũ Thị Hoa',
-        '2026-08-06 14:30:00', NULL, 0, 3);
+     '2026-08-06 14:30:00', NULL,
+     NEXT VALUE FOR global_sync_version, 3);
 
 
 -- ============================================================
@@ -88,16 +107,36 @@ VALUES
     -- ========================================================
 
     ('BOOK001', N'Kotlin cơ bản',
-        120000, '2026-08-01 08:00:00', NULL, 0, 1, 2),
+     120000,
+     '2026-08-01 08:00:00',
+     NULL,
+     NEXT VALUE FOR global_sync_version,
+     1,
+     2),
 
     ('BOOK002', N'Java Programming',
-        150000, '2026-08-01 09:00:00', NULL, 0, 1, 2),
+     150000,
+     '2026-08-01 09:00:00',
+     NULL,
+     NEXT VALUE FOR global_sync_version,
+     1,
+     2),
 
     ('BOOK003', N'Spring Boot thực chiến',
-        180000, '2026-08-02 10:00:00', NULL, 0, 1, 3),
+     180000,
+     '2026-08-02 10:00:00',
+     NULL,
+     NEXT VALUE FOR global_sync_version,
+     1,
+     3),
 
     ('BOOK004', N'Clean Code',
-        200000, '2026-08-03 11:00:00', NULL, 0, 1, 3),
+     200000,
+     '2026-08-03 11:00:00',
+     NULL,
+     NEXT VALUE FOR global_sync_version,
+     1,
+     3),
 
 
     -- ========================================================
@@ -105,13 +144,28 @@ VALUES
     -- ========================================================
 
     ('BOOK005', N'SQL Server cơ bản',
-        130000, '2026-08-02 08:00:00', NULL, 0, 2, 2),
+     130000,
+     '2026-08-02 08:00:00',
+     NULL,
+     NEXT VALUE FOR global_sync_version,
+     2,
+     2),
 
     ('BOOK006', N'Database Design',
-        170000, '2026-08-03 09:00:00', NULL, 0, 2, 2),
+     170000,
+     '2026-08-03 09:00:00',
+     NULL,
+     NEXT VALUE FOR global_sync_version,
+     2,
+     2),
 
     ('BOOK007', N'Advanced SQL',
-        190000, '2026-08-04 10:00:00', NULL, 0, 2, 3),
+     190000,
+     '2026-08-04 10:00:00',
+     NULL,
+     NEXT VALUE FOR global_sync_version,
+     2,
+     3),
 
 
     -- ========================================================
@@ -119,10 +173,20 @@ VALUES
     -- ========================================================
 
     ('BOOK008', N'Computer Networks',
-        210000, '2026-08-03 08:00:00', NULL, 0, 3, 3),
+     210000,
+     '2026-08-03 08:00:00',
+     NULL,
+     NEXT VALUE FOR global_sync_version,
+     3,
+     3),
 
     ('BOOK009', N'Mạng máy tính căn bản',
-        140000, '2026-08-04 09:00:00', NULL, 0, 3, 3),
+     140000,
+     '2026-08-04 09:00:00',
+     NULL,
+     NEXT VALUE FOR global_sync_version,
+     3,
+     3),
 
 
     -- ========================================================
@@ -130,10 +194,20 @@ VALUES
     -- ========================================================
 
     ('BOOK010', N'Operating System',
-        220000, '2026-08-04 08:00:00', NULL, 0, 4, 2),
+     220000,
+     '2026-08-04 08:00:00',
+     NULL,
+     NEXT VALUE FOR global_sync_version,
+     4,
+     2),
 
     ('BOOK011', N'Linux Administration',
-        250000, '2026-08-05 09:00:00', NULL, 0, 4, 2),
+     250000,
+     '2026-08-05 09:00:00',
+     NULL,
+     NEXT VALUE FOR global_sync_version,
+     4,
+     2),
 
 
     -- ========================================================
@@ -141,16 +215,36 @@ VALUES
     -- ========================================================
 
     ('BOOK012', N'Artificial Intelligence',
-        300000, '2026-08-05 08:00:00', NULL, 0, 5, 2),
+     300000,
+     '2026-08-05 08:00:00',
+     NULL,
+     NEXT VALUE FOR global_sync_version,
+     5,
+     2),
 
     ('BOOK013', N'Machine Learning',
-        320000, '2026-08-06 09:00:00', NULL, 0, 5, 3),
+     320000,
+     '2026-08-06 09:00:00',
+     NULL,
+     NEXT VALUE FOR global_sync_version,
+     5,
+     3),
 
     ('BOOK014', N'Deep Learning',
-        350000, '2026-08-07 10:00:00', NULL, 0, 5, 3),
+     350000,
+     '2026-08-07 10:00:00',
+     NULL,
+     NEXT VALUE FOR global_sync_version,
+     5,
+     3),
 
     ('BOOK015', N'AI with Python',
-        280000, '2026-08-08 11:00:00', NULL, 0, 5, 2);
+     280000,
+     '2026-08-08 11:00:00',
+     NULL,
+     NEXT VALUE FOR global_sync_version,
+     5,
+     2);
 
 
 -- ============================================================
@@ -177,92 +271,92 @@ INSERT INTO loan_slip
 VALUES
 
     ('LS001',
-        2,
-        1,
-        1,
-        0,
-        '2026-08-10 08:00:00',
-        NULL,
-        0,
-        '2026-08-10',
-        '2026-08-20'),
+     2,
+     1,
+     1,
+     0,
+     '2026-08-10 08:00:00',
+     NULL,
+     NEXT VALUE FOR global_sync_version,
+     '2026-08-10',
+     '2026-08-20'),
 
     ('LS002',
-        2,
-        2,
-        2,
-        1,
-        '2026-08-05 09:00:00',
-        NULL,
-        0,
-        '2026-08-05',
-        '2026-08-15'),
+     2,
+     2,
+     2,
+     1,
+     '2026-08-05 09:00:00',
+     NULL,
+     NEXT VALUE FOR global_sync_version,
+     '2026-08-05',
+     '2026-08-15'),
 
     ('LS003',
-        3,
-        3,
-        3,
-        0,
-        '2026-08-11 10:00:00',
-        NULL,
-        0,
-        '2026-08-11',
-        '2026-08-21'),
+     3,
+     3,
+     3,
+     0,
+     '2026-08-11 10:00:00',
+     NULL,
+     NEXT VALUE FOR global_sync_version,
+     '2026-08-11',
+     '2026-08-21'),
 
     ('LS004',
-        3,
-        5,
-        4,
-        1,
-        '2026-08-06 11:00:00',
-        NULL,
-        0,
-        '2026-08-06',
-        '2026-08-16'),
+     3,
+     5,
+     4,
+     1,
+     '2026-08-06 11:00:00',
+     NULL,
+     NEXT VALUE FOR global_sync_version,
+     '2026-08-06',
+     '2026-08-16'),
 
     ('LS005',
-        2,
-        6,
-        5,
-        0,
-        '2026-08-12 13:00:00',
-        NULL,
-        0,
-        '2026-08-12',
-        '2026-08-22'),
+     2,
+     6,
+     5,
+     0,
+     '2026-08-12 13:00:00',
+     NULL,
+     NEXT VALUE FOR global_sync_version,
+     '2026-08-12',
+     '2026-08-22'),
 
     ('LS006',
-        3,
-        8,
-        6,
-        1,
-        '2026-08-07 14:00:00',
-        NULL,
-        0,
-        '2026-08-07',
-        '2026-08-17'),
+     3,
+     8,
+     6,
+     1,
+     '2026-08-07 14:00:00',
+     NULL,
+     NEXT VALUE FOR global_sync_version,
+     '2026-08-07',
+     '2026-08-17'),
 
     ('LS007',
-        2,
-        10,
-        1,
-        0,
-        '2026-08-13 08:30:00',
-        NULL,
-        0,
-        '2026-08-13',
-        '2026-08-23'),
+     2,
+     10,
+     1,
+     0,
+     '2026-08-13 08:30:00',
+     NULL,
+     NEXT VALUE FOR global_sync_version,
+     '2026-08-13',
+     '2026-08-23'),
 
     ('LS008',
-        3,
-        12,
-        2,
-        0,
-        '2026-08-14 09:30:00',
-        NULL,
-        0,
-        '2026-08-14',
-        '2026-08-24');
+     3,
+     12,
+     2,
+     0,
+     '2026-08-14 09:30:00',
+     NULL,
+     NEXT VALUE FOR global_sync_version,
+     '2026-08-14',
+     '2026-08-24');
 
 
 -- ============================================================
@@ -277,8 +371,8 @@ SELECT
     c.version,
     COUNT(b.id) AS amount_book
 FROM category c
-LEFT JOIN book b
-    ON b.category_id = c.id
+         LEFT JOIN book b
+                   ON b.category_id = c.id
 GROUP BY
     c.id,
     c.category_code,
@@ -340,3 +434,14 @@ SELECT
     ls.delete_at
 FROM loan_slip ls
 ORDER BY ls.id;
+
+
+-- ============================================================
+-- 9. KIỂM TRA GLOBAL SYNC VERSION
+-- ============================================================
+
+SELECT
+    name,
+    current_value
+FROM sys.sequences
+WHERE name = 'global_sync_version';
